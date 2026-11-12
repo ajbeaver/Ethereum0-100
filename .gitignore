@@ -1,0 +1,95 @@
+# Public course files only. Everything else is local learner work by default.
+# Keep answers, code, projects, notes, evidence, credentials, and generated files private.
+# To publish a NEW course file, add its exact root-relative path below.
+# Changes to existing public files remain visible to Git.
+# This does not filter personal edits made inside an allowed course file.
+# Ignore rules do not remove files from existing commits or override git add -f.
+
+# Ignore all files, but traverse directories to reach the explicit public files.
+*
+!*/
+
+# Public course manifest
+!/.gitignore
+!/README.md
+!/setup.md
+!/module01-foundations/README.md
+!/module01-foundations/assessment.md
+!/module01-foundations/exercises/lesson01/lesson01.md
+!/module01-foundations/exercises/lesson02/lesson02.md
+!/module01-foundations/exercises/lesson03/lesson03.md
+!/module01-foundations/lesson01-state-and-accounts.md
+!/module01-foundations/lesson02-transactions-and-gas.md
+!/module01-foundations/lesson03-blocks-and-finality.md
+!/module02-rpc-and-abi/README.md
+!/module02-rpc-and-abi/assessment.md
+!/module02-rpc-and-abi/exercises/lesson01/lesson01.md
+!/module02-rpc-and-abi/exercises/lesson02/lesson02.md
+!/module02-rpc-and-abi/exercises/lesson03/lesson03.md
+!/module02-rpc-and-abi/lesson01-json-rpc-requests.md
+!/module02-rpc-and-abi/lesson02-calls-and-simulation.md
+!/module02-rpc-and-abi/lesson03-abi-and-calldata.md
+!/module03-solidity-foundations/README.md
+!/module03-solidity-foundations/assessment.md
+!/module03-solidity-foundations/exercises/lesson01/lesson01.md
+!/module03-solidity-foundations/exercises/lesson02/lesson02.md
+!/module03-solidity-foundations/exercises/lesson03/lesson03.md
+!/module03-solidity-foundations/lesson01-contracts-and-deployment.md
+!/module03-solidity-foundations/lesson02-types-and-storage.md
+!/module03-solidity-foundations/lesson03-callers-and-errors.md
+!/module04-contract-interfaces/README.md
+!/module04-contract-interfaces/assessment.md
+!/module04-contract-interfaces/exercises/lesson01/lesson01.md
+!/module04-contract-interfaces/exercises/lesson02/lesson02.md
+!/module04-contract-interfaces/exercises/lesson03/lesson03.md
+!/module04-contract-interfaces/lesson01-events-and-receipts.md
+!/module04-contract-interfaces/lesson02-payable-calls.md
+!/module04-contract-interfaces/lesson03-state-machines.md
+!/module05-testing-and-debugging/README.md
+!/module05-testing-and-debugging/assessment.md
+!/module05-testing-and-debugging/exercises/lesson01/lesson01.md
+!/module05-testing-and-debugging/exercises/lesson02/lesson02.md
+!/module05-testing-and-debugging/exercises/lesson03/lesson03.md
+!/module05-testing-and-debugging/lesson01-unit-tests.md
+!/module05-testing-and-debugging/lesson02-traces-and-revert-data.md
+!/module05-testing-and-debugging/lesson03-fuzzing-and-invariants.md
+!/module06-smart-contract-security/README.md
+!/module06-smart-contract-security/assessment.md
+!/module06-smart-contract-security/exercises/lesson01/lesson01.md
+!/module06-smart-contract-security/exercises/lesson02/lesson02.md
+!/module06-smart-contract-security/exercises/lesson03/lesson03.md
+!/module06-smart-contract-security/lesson01-reentrancy.md
+!/module06-smart-contract-security/lesson02-authorization-and-griefing.md
+!/module06-smart-contract-security/lesson03-accounting-and-review.md
+!/module07-tokens-and-composition/README.md
+!/module07-tokens-and-composition/assessment.md
+!/module07-tokens-and-composition/exercises/lesson01/lesson01.md
+!/module07-tokens-and-composition/exercises/lesson02/lesson02.md
+!/module07-tokens-and-composition/exercises/lesson03/lesson03.md
+!/module07-tokens-and-composition/lesson01-erc-20-balances-and-allowances.md
+!/module07-tokens-and-composition/lesson02-erc-721-ownership-and-callbacks.md
+!/module07-tokens-and-composition/lesson03-external-dependencies.md
+!/module08-off-chain-indexing/README.md
+!/module08-off-chain-indexing/assessment.md
+!/module08-off-chain-indexing/exercises/lesson01/lesson01.md
+!/module08-off-chain-indexing/exercises/lesson02/lesson02.md
+!/module08-off-chain-indexing/exercises/lesson03/lesson03.md
+!/module08-off-chain-indexing/lesson01-reading-and-decoding-logs.md
+!/module08-off-chain-indexing/lesson02-persistence-and-replay.md
+!/module08-off-chain-indexing/lesson03-reorg-recovery.md
+!/module09-networks-and-operations/README.md
+!/module09-networks-and-operations/assessment.md
+!/module09-networks-and-operations/exercises/lesson01/lesson01.md
+!/module09-networks-and-operations/exercises/lesson02/lesson02.md
+!/module09-networks-and-operations/exercises/lesson03/lesson03.md
+!/module09-networks-and-operations/lesson01-network-and-deployment-identity.md
+!/module09-networks-and-operations/lesson02-layer-2-and-bridge-semantics.md
+!/module09-networks-and-operations/lesson03-transaction-operations.md
+!/module10-lab-escrow-capstone/README.md
+!/module10-lab-escrow-capstone/assessment.md
+!/module10-lab-escrow-capstone/exercises/lesson01/lesson01.md
+!/module10-lab-escrow-capstone/exercises/lesson02/lesson02.md
+!/module10-lab-escrow-capstone/exercises/lesson03/lesson03.md
+!/module10-lab-escrow-capstone/lesson01-escrow-contract-specification.md
+!/module10-lab-escrow-capstone/lesson02-indexer-and-reconciliation.md
+!/module10-lab-escrow-capstone/lesson03-final-verification-and-handoff.md
