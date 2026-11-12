@@ -16,11 +16,44 @@ A unit test may verify a single deposit of 1 ETH. A fuzz test accepts generated 
 
 Test rejected inputs separately. If you discard every invalid sample, the fuzz test provides no evidence about rejection behavior. When Forge reports a counterexample, capture it as a focused deterministic test.
 
-## 5.3.2 — Check a property after sequences
+## 5.3.2 — State a property before generating inputs
+
+A fuzz test is a parameterized experiment. Forge supplies inputs; the test defines what must remain true for the valid domain. For a credit operation, the property might be that credit increases by exactly the accepted amount and an unrelated user's credit does not change.
+
+`bound` maps a generated integer into a chosen range. A Solidity amount such as `10 ether` is an integer number of wei using a source-code unit suffix. Funding the actor with `vm.deal` ensures a valid operation does not fail merely because the test fixture lacks funds. These preparations should support the property without calculating its expected answer from the implementation under test.
+
+A simple Counter property can be explored without the entire escrow. In a test contract with a fresh `counter` from Lesson 5.1, this method checks repeated increments:
+
+```solidity
+function testFuzzIncrementCount(uint8 raw) public {
+    uint256 steps = bound(uint256(raw), 0, 20);
+    uint256 beforeValue = counter.value();
+    for (uint256 i = 0; i < steps; i++) {
+        counter.increment();
+    }
+    assertEq(counter.value(), beforeValue + steps);
+}
+```
+
+The method is a fragment inside that test contract. The bounded loop keeps each run small. It checks a general relationship, while deterministic tests still cover known boundaries and specific regressions.
+
+## 5.3.3 — Check a property after sequences
 
 Invariant testing runs sequences of calls and checks a property across reachable states. A handler can select meaningful actors and actions, provide funds, and keep an independent record of expected obligations. Use the handler to reach both settlement paths. Confirm operations actually succeed so a suite of only rejected calls cannot pass vacuously.
 
 For Lab Escrow, tracked liabilities consist of active principal plus unpaid credits. Successful settlement moves an amount between these categories. Successful withdrawal reduces unpaid credits and contract balance equally. The solvency condition is `balance >= active principal + unpaid credits`. Equality is expected in controlled runs without unsolicited ETH.
+
+## 5.3.4 — An invariant connects several operations
+
+A single-operation property checks a relationship around one action. A sequence invariant is checked after varying orders of actions: open, settle, withdraw, attempt a rejected transition, and open again. A handler is a testing adapter that chooses actors and valid arguments so those states are reached.
+
+For principal 7 and credit 0, settling moves the model to principal 0 and credit 7 while leaving vault balance unchanged. Withdrawal then moves credit and balance down by 7. An independent test ledger can predict those changes without simply reading the implementation's totals back as its expected values.
+
+The condition `balance >= liabilities` is necessary but not sufficient. If a bug credits Alice instead of Bob, solvency can still hold. Assert per-user obligations, terminal record states, and meaningful action success as well. A suite in which every action reverts explores very little despite reporting no invariant failure.
+
+## Self-review
+
+What property would distinguish correct total liabilities from correct ownership of those liabilities? Why does bounding successful cases not replace explicit invalid-input tests?
 
 ## Practice
 

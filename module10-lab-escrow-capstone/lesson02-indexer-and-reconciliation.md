@@ -22,9 +22,35 @@ Scan bounded ranges starting at the creation block. Filter by emitter and the fo
 
 Reject impossible transitions, invalid field sizes, and negative credit. Store the journal, projection updates, and range checkpoint in one database transaction. A mismatch at the checkpoint triggers a rebuild from verified deployment history or a clear error when deployment itself is stale.
 
-## 10.2.2 — Verification is part of the feature
+## 10.2.2 — Replay is another implementation of the state machine
+
+A decoder turns bytes into typed event fields. The projector then applies the capstone's transition rules. It should not treat every well-shaped event as automatically meaningful. Released for a missing ID, a second settlement, a mismatched amount, or a withdrawal exceeding credit indicates inconsistent evidence or a faulty projection.
+
+For a release, require an active record whose stored payee and principal agree with the event. Move that principal out of the active total and into that payee's credit. Refund uses the stored payer instead. Withdrawn consumes the credit owner's entitlement; the recipient is a payout destination, not necessarily the account whose credit decreases.
+
+These checks do not replace on-chain verification. They make the projection's assumptions explicit and prevent corrupt data from silently accumulating into a plausible table.
+
+## 10.2.3 — One accepted prefix, one transaction
+
+Capture explicit range boundaries and validate their block context. Insert source logs, apply only newly accepted events, and advance the checkpoint together. If decoding or a transition check fails, roll back that import range and retain the previous accepted checkpoint. A printed “processed through H” must describe committed state.
+
+Use the single-writer lab model and transactional connection behavior from Lesson 8.2. Store uint256-domain amounts losslessly, perform arithmetic as Python integers, and expose decimal representations deliberately. A small SQLite schema is sufficient; a message broker or indexing framework would add machinery without clarifying the required guarantees.
+
+## 10.2.4 — Verification is part of the feature
 
 Expose a command that prints deposit status, each observed user’s credit, active principal, unpaid total, and indexed height and hash. Pin contract getter queries to that height and verify the block hash around the read. Report differences with the specific record and observed values. The projection may lag the head. Show its indexed height explicitly.
+
+## 10.2.5 — Reconcile both totals and ownership
+
+Suppose the projected unpaid total is 7 and the getter also returns 7. If the projection assigns it to Alice while the contract assigns it to Bob, the aggregate match hides a serious error. Compare deposit states, stored parties/amounts, individual credits, and totals at the shared indexed block.
+
+Print that height and hash beside the result, including when the index lags behind the head. Recheck the hash around the getter read set. A mismatch means the comparison is no longer about one stable prefix, so discard it rather than interpreting mixed-time values as an accounting defect.
+
+The verification command is part of the delivered interface because it makes the derived view auditable. A successful ingestion command alone cannot establish that the intended contract and projector agree.
+
+## Self-review
+
+Which well-encoded events should the projector still reject? Why does matching aggregate unpaid credit not establish correct credit ownership?
 
 ## Practice
 

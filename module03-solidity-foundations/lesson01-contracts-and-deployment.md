@@ -57,9 +57,27 @@ contract Counter {
 }
 ```
 
-The compiler supplies a getter for `value`. The constructor gives each deployment its own initial storage. Two Counter deployments can have identical runtime code and independent values.
+Read the example before deploying it: distinguish the stored variable, its generated getter, the constructor, and the update method.
 
-## 3.1.2 — Deploy and inspect
+## 3.1.2 — Read the Solidity example as a program
+
+The SPDX line declares the source license. `pragma solidity 0.8.30` restricts the compiler accepted by this source; the project's configuration tells Forge which compiler to select. `contract Counter` defines a contract type. `uint256` is an unsigned 256-bit integer, so `value` cannot represent negative numbers.
+
+A state variable declared outside functions belongs to persistent contract storage. `public` asks the compiler to expose a getter named `value()`. It does not make the variable directly assignable by a caller. `external` makes `increment` callable through the contract's external interface. Its body changes storage, so a committed update requires a transaction.
+
+The constructor accepts `initialValue` during creation and assigns it to the new instance's storage. That parameter is not a permanent second storage variable. This is why creation needs an argument while later increments do not.
+
+## 3.1.3 — Separate three artifacts of deployment
+
+**Source** is what the developer writes. **Creation code** runs to initialize a deployment. **Runtime code** is the program installed at the created address and used by later calls. `cast code` queries that installed runtime, not the source file or constructor execution history.
+
+Two deployments constructed with 7 and 12 can have the same runtime code while their getters return different values. Storage is specific to each address. Modifying a local source file afterward does not replace the code already deployed. Build and deploy again if you intend to test changed code, then use the newly returned address.
+
+In the deployment command below, `src/Counter.sol:Counter` names the file and contract type to deploy. `--constructor-args 7` supplies the initialization input. `--broadcast` requests an actual submission rather than only a deployment simulation, and `--unlocked` uses a local node account for authorization.
+
+A deployed address alone is not sufficient evidence for repeating the lab: retain its chain context and receipt. The next read must use that exact address and endpoint. If the getter returns nothing, first check whether the selected chain actually has code at that address before debugging the arithmetic.
+
+## 3.1.4 — Deploy and inspect
 
 From the project root with Anvil running:
 
@@ -79,6 +97,10 @@ cast call --rpc-url "$RPC_URL" "$COUNTER" 'value()(uint256)'
 ```
 
 The getter reads 7 before the increment and 8 afterward. The deployed code bytes stay the same. Capture both the deployment transaction hash and address in your lab notes.
+
+## Self-review
+
+Which parts of the example exist after the constructor finishes: runtime code, constructor parameter name, and stored value? Why can compiling a changed source file leave an old deployed Counter unchanged?
 
 ## Practice
 
