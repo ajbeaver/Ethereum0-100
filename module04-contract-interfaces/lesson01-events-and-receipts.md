@@ -45,7 +45,7 @@ The Solidity fragment must be placed inside a contract. Its report function reco
 
 ## 4.1.3 — Event evidence and state
 
-The example emits a reading without persisting it in storage. External software can query logs. Ordinary Solidity execution cannot query historical receipt logs. Logs emitted in reverted execution do not survive. A receipt’s emitting address matters because a separate contract can emit an event with the same signature.
+External software can query logs, while ordinary Solidity execution cannot query historical receipt logs. Logs emitted in reverted execution do not survive. A receipt’s emitting address matters because a separate contract can emit an event with the same signature.
 
 Use an address filter and the event signature for the Lab Escrow indexer. Publish enough fields to identify the deposit and the transition without requiring a second read that might observe a newer state.
 

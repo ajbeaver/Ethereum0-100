@@ -14,7 +14,7 @@
 
 Build a matrix with actions down the rows and actors across columns. Include payer, payee, unrelated address, and a relay contract. For each cell, specify whether the action may succeed and under what state and deadline. An unprotected function that changes a role can bypass an otherwise correct authorization check.
 
-`tx.origin` refers to the transaction’s original sender. If Alice calls a malicious relay and it calls a target that authenticates via `tx.origin`, the target still sees Alice as the origin. An immediate-caller check would instead see the relay. Contract wallets also need authorization models that can recognize the wallet contract as the actor.
+`tx.origin` identifies the transaction’s original sender, not the immediate caller. The relay example below shows why that makes it unsuitable for this access-control boundary.
 
 ## 6.2.2 — Authorization is a relationship, not a special address
 
@@ -24,15 +24,11 @@ The relay case makes `tx.origin` misleading. Suppose Alice authorizes only an in
 
 A contract wallet is also an immediate caller. Requiring every legitimate actor to be an EOA would unnecessarily exclude it. Model authority using the supported actor/interface contract rather than a blanket belief that code-bearing accounts are malicious.
 
-## 6.2.3 — One recipient should not halt another
-
-A settlement function that pushes ETH to every recipient in one loop can be blocked by one rejecting receiver or exceed the block’s usable gas budget. Bounded per-deposit settlement plus per-user withdrawal isolates these failures. Track exactly who can direct a payout. If anyone can supply the destination for someone else’s credit, authorization has shifted away from the rightful owner.
-
-## 6.2.4 — Separate safety from progress
+## 6.2.3 — Failure isolation and legitimate progress
 
 A **safety** rule prevents an unauthorized payment. A **liveness** concern asks whether a legitimate action can eventually make progress. A vault that never pays anyone avoids theft in a trivial sense while failing its purpose. Griefing exploits the ability to prevent progress, sometimes without directly stealing assets.
 
-Consider a function looping over 100 recipients and requiring every send to succeed. If recipient 41 rejects, the transaction can revert payments to the earlier recipients too. Even with cooperative recipients, an ever-growing list may become too expensive to process in one transaction. Those are independent reasons to prefer bounded operations and individually initiated withdrawals.
+Consider a function looping over 100 recipients and requiring every send to succeed. If recipient 41 rejects, the transaction can revert payments to the earlier recipients too. Even with cooperative recipients, an ever-growing list may become too expensive to process in one transaction. Those are independent reasons to prefer bounded per-deposit settlement and individually initiated withdrawals.
 
 With per-user credit, Bob's failed withdrawal preserves Bob's claim. Carol can attempt hers separately. The system still needs clear authority over payout destinations: Alice must not be able to consume Bob's credit by selecting herself as recipient. In the capstone, `msg.sender` identifies the credit being consumed, while the supplied recipient chooses where that owner's payment goes.
 

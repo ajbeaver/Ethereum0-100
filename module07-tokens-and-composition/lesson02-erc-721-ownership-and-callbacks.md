@@ -12,7 +12,7 @@
 
 ## 7.2.1 — Identity rather than quantity
 
-An ERC-721 contract records ownership for unique token IDs. The asset is identified by chain, contract address, and token ID. `balanceOf(owner)` counts holdings. `ownerOf(tokenId)` identifies the owner and rejects invalid IDs. `approve` delegates one token, and `setApprovalForAll` delegates management of the owner’s tokens in that contract. A token-specific approval is cleared when ownership changes.
+An ERC-721 contract records ownership for unique token IDs. `balanceOf(owner)` counts holdings. `ownerOf(tokenId)` identifies the owner and rejects invalid IDs. `approve` delegates one token, and `setApprovalForAll` delegates management of the owner’s tokens in that contract. A token-specific approval is cleared when ownership changes.
 
 ## 7.2.2 — Identify the asset and the authority separately
 
@@ -26,17 +26,15 @@ A token-specific approval lets an address transfer that token while the approval
 
 A safe transfer to a contract checks that its receiver hook accepts the NFT. The receiver returns the required selector, `0x150b7a02`, from `onERC721Received`. A rejected hook reverts the transfer. The callback can execute code while the transfer is in progress. Design your own calling contract with that callback boundary in mind.
 
-Suppose escrow locks NFT #17, then assigns a release claim. Its obligations would refer to asset IDs and owners instead of amounts and aggregate wei. Settlement must account for both the transfer and receiver acceptance. Custody and the right to claim are distinct.
-
 ## 7.2.4 — A safe transfer checks an interface, not intent
 
-When a contract receives a safe transfer, its hook gets a chance to acknowledge the token through the required return selector. The transfer reverts if that acknowledgement fails. This helps avoid sending an NFT to an ordinary contract that cannot participate in the receiver interface.
+The receiver check helps avoid sending an NFT to an ordinary contract that cannot participate in that interface.
 
 A receiver returning the correct selector can still contain arbitrary logic. It can attempt calls back into the sender's application during the transfer. “Safe” therefore refers to a specific receiver-acceptance mechanism, not proof that every surrounding state transition is secure.
 
 Suppose an application first transfers an NFT and only afterward clears the owner's claim. The receiver hook can observe that still-active claim while control is external. The same reasoning as an ETH callback applies, even though the asset is an ID rather than an amount. Establish the application's effects before the interaction and ensure a rejected transfer restores the claim through rollback.
 
-An NFT escrow would need to track custody and entitlement for each asset identity. Summing wei liabilities would not express its obligations. This comparison is useful design reasoning, but changing the capstone to NFTs now would introduce a different custody protocol before its native-ETH path is complete.
+An NFT escrow would need to track custody and the distinct right to claim each asset identity. Summing wei liabilities would not express its obligations. This comparison is useful design reasoning, but changing the capstone to NFTs now would introduce a different custody protocol before its native-ETH path is complete.
 
 ## Self-review
 

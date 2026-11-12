@@ -44,7 +44,7 @@ Expose a command that prints deposit status, each observed user’s credit, acti
 
 Suppose the projected unpaid total is 7 and the getter also returns 7. If the projection assigns it to Alice while the contract assigns it to Bob, the aggregate match hides a serious error. Compare deposit states, stored parties/amounts, individual credits, and totals at the shared indexed block.
 
-Print that height and hash beside the result, including when the index lags behind the head. Recheck the hash around the getter read set. A mismatch means the comparison is no longer about one stable prefix, so discard it rather than interpreting mixed-time values as an accounting defect.
+If the hash check around the getter reads fails, discard the comparison rather than interpreting mixed-time values as an accounting defect. Report lag using the indexed height required above.
 
 The verification command is part of the delivered interface because it makes the derived view auditable. A successful ingestion command alone cannot establish that the intended contract and projector agree.
 

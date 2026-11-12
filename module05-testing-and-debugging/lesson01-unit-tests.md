@@ -45,19 +45,17 @@ Save this as `test/Counter.t.sol` and run `forge test`. The next section explain
 
 Forge's in-process test execution does not need the Anvil node used for terminal deployment labs. Cheatcodes let the test control caller, time, and balances deterministically. They are testing facilities, not Solidity functions available to an arbitrary production contract.
 
-## 5.1.3 — Control one variable at a time
+## 5.1.3 — Control the intended call and execution context
 
-`vm.prank(alice)` sets the caller for the next applicable call. Apply it just before the call you want to test. `vm.deal(alice, amount)` sets the test balance, and `vm.warp(deadline)` changes the test timestamp. To verify a custom error with arguments, pass the exact expected bytes to `vm.expectRevert(abi.encodeWithSelector(...))` before the target call.
+`vm.prank(alice)` sets the caller for the next applicable call; the getter example below explains why its placement matters. `vm.deal(alice, amount)` sets the test balance, and `vm.warp(deadline)` changes the test timestamp. To verify a custom error with arguments, pass the exact expected bytes to `vm.expectRevert(abi.encodeWithSelector(...))` before the target call.
 
 A passing revert assertion establishes the call failed with the expected error. Also assert the relevant state is unchanged. For a rejected escrow release, inspect both the deposit status and the payee’s credit.
-
-## 5.1.4 — Scope the action you intend to test
 
 A prank affects the next applicable external call, so even an innocent getter between prank and action can change which call receives the intended sender. Read all setup values first, establish the expected failure, then place caller control immediately before the target operation. Inspect the trace if the observed caller surprises you.
 
 For a timed record, one useful test progression is: construct an active record, select the wrong actor, expect its exact authorization error, attempt the update, then assert the state is still active and the stored value unchanged. A different test controls time while keeping the actor valid. Changing both variables at once makes it harder to identify which guard is responsible.
 
-## 5.1.5 — A revert expectation is only one assertion
+## 5.1.4 — A revert expectation is only one assertion
 
 A broad “some revert happened” test can pass because the record is missing, not because authorization works. Exact custom-error bytes establish the intended path more narrowly. State assertions establish absence of unwanted effects. For a successful change, inspect both the new record value and any relevant aggregate rather than assuming a successful call implies a correct business result.
 

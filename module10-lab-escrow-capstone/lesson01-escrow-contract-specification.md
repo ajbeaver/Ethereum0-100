@@ -56,7 +56,7 @@ A revert removes both the prepared withdrawal event and its accounting changes. 
 
 Map every table row to success, rejection, and unchanged-state tests. Include the exact deadline, repeated settlement, rejecting recipient, callback attempts, and independent users. Keep the required native-ETH scope, no history loops, and no global administrator. Adding upgrades or asset support would create new authority and accounting questions rather than improve completion of this specification.
 
-The capstone requirements are now the authoritative interface. Earlier small examples are building blocks; inspect any reused code against these exact preconditions and event fields before treating it as compatible.
+Check reused code against these authoritative preconditions and event fields before treating an earlier example as capstone-compatible.
 
 ## Self-review
 

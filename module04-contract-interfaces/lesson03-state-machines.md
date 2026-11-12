@@ -42,7 +42,7 @@ A terminal state is an application decision: Released and Refunded have no outgo
 
 `block.timestamp` is the executing block’s time in Unix seconds. It is a protocol input for broad deadline windows. In tests, control it and examine both sides of the boundary. Avoid treating it as a random seed or as a precision wall clock. A repeat transaction can execute later than its original simulation.
 
-A state machine should explain what a second release attempt does, even if it comes from the correct payer. Mark settlement before recording any resulting credit. Design a distinct event for each outcome, then write tests that prove a rejected transition leaves state and credit intact.
+A state machine should explain what a second release attempt does, even if it comes from the correct payer. Mark settlement before recording any resulting credit. The implementation and test plan below connect those effects to the transition table.
 
 ## 4.3.4 — Translate the model into an implementation order
 

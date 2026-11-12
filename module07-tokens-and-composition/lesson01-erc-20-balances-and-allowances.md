@@ -16,7 +16,7 @@ An ERC-20 balance is returned by the token contract’s `balanceOf(address)`. It
 
 ## 7.1.2 — The three actors
 
-Alice owns 500 units. She approves Bob for 80. The approval changes Bob’s spending authority over Alice’s balance. It does not move the units. Bob then calls `transferFrom(Alice, Carol, 30)`. In a conventional implementation with finite allowance, Alice has 470 units, Carol gains 30, and the remaining allowance is 50. Bob is the spender and Carol is the recipient.
+Alice owns 500 units and approves Bob for 80. Approval changes Bob’s spending authority; it does not move units. Bob can then call `transferFrom(Alice, Carol, 30)`. The table below traces the balances and finite allowance, keeping Bob the spender distinct from Carol the recipient.
 
 ```bash
 CAROL='PASTE_THIRD_ADDRESS_FROM_YOUR_ANVIL_RUN'
@@ -24,7 +24,7 @@ cast calldata 'approve(address,uint256)' "$BOB" 80
 cast calldata 'transferFrom(address,address,uint256)' "$ALICE" "$CAROL" 30
 ```
 
-These commands encode two payloads without executing either. A new nonzero approval can replace an existing allowance, creating an ordering risk if the spender uses the old allowance before replacement. Use narrow permissions and verify the correct spender address.
+These commands encode two payloads without executing either. The allowance-replacement example below explains why verifying the spender and using narrow permissions matter.
 
 ## 7.1.3 — Keep owner, spender, and recipient separate
 
@@ -47,8 +47,6 @@ Native ETH used for transaction fees remains separate from these token balances.
 ERC-20 specifies Boolean returns for transfer operations. Some implementations revert on failure, some return false, and some deployed tokens omit a return value. A production integration can use a vetted safe wrapper for return handling. Transfer fees and rebasing also affect balance accounting and require separate support decisions. Lab Escrow uses native ETH, so its principal can be credited from `msg.value`.
 
 ## 7.1.5 — Treat units and authority as interface contracts
-
-`decimals` is a presentation convention. The ledger holds integer base units whether a UI shows 1.25 or 1,250,000. Token metadata does not identify a trustworthy asset; another contract can use the same name and symbol. Record the network and token address before interpreting balances.
 
 Replacing an allowance can race with a spender's use of the existing authority. A planned replacement of 80 with 20 is not automatically equivalent to “allow only 20 more total.” Transaction ordering can let the old permission be used before the replacement executes. Narrow approval policies and asset-specific interaction patterns need explicit decisions.
 

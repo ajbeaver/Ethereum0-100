@@ -12,7 +12,7 @@
 
 ## 3.1.1 — Source, bytecode, and address
 
-A Solidity source file describes one or more contracts. Forge invokes the Solidity compiler and stores artifacts under `out/`. The ABI describes interactions and the bytecode provides executable instructions. Contract creation executes initialization code. Its returned runtime code is installed at the new address. The constructor runs during initialization and can write initial storage.
+A Solidity source file describes one or more contracts. Forge invokes the compiler and stores artifacts under `out/`, including an ABI for interactions and bytecode for execution. This lesson follows that source through initialization and deployment, distinguishing the artifacts as they become relevant.
 
 ### Create the lesson project
 

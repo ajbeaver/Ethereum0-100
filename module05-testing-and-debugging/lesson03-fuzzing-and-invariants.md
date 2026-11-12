@@ -37,15 +37,13 @@ function testFuzzIncrementCount(uint8 raw) public {
 
 The method is a fragment inside that test contract. The bounded loop keeps each run small. It checks a general relationship, while deterministic tests still cover known boundaries and specific regressions.
 
-## 5.3.3 — Check a property after sequences
+## 5.3.3 — Accounting invariants across action sequences
 
-Invariant testing runs sequences of calls and checks a property across reachable states. A handler can select meaningful actors and actions, provide funds, and keep an independent record of expected obligations. Use the handler to reach both settlement paths. Confirm operations actually succeed so a suite of only rejected calls cannot pass vacuously.
+Invariant testing runs sequences of calls and checks a property across reachable states. A handler selects actors and actions, provides funds, and keeps an independent record of expected obligations. Use it to reach both settlement paths.
 
 For Lab Escrow, tracked liabilities consist of active principal plus unpaid credits. Successful settlement moves an amount between these categories. Successful withdrawal reduces unpaid credits and contract balance equally. The solvency condition is `balance >= active principal + unpaid credits`. Equality is expected in controlled runs without unsolicited ETH.
 
-## 5.3.4 — An invariant connects several operations
-
-A single-operation property checks a relationship around one action. A sequence invariant is checked after varying orders of actions: open, settle, withdraw, attempt a rejected transition, and open again. A handler is a testing adapter that chooses actors and valid arguments so those states are reached.
+Vary the order of actions: open, settle, withdraw, attempt a rejected transition, and open again. This explores relationships that an isolated successful deposit cannot establish.
 
 For principal 7 and credit 0, settling moves the model to principal 0 and credit 7 while leaving vault balance unchanged. Withdrawal then moves credit and balance down by 7. An independent test ledger can predict those changes without simply reading the implementation's totals back as its expected values.
 

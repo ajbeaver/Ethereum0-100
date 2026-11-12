@@ -14,8 +14,6 @@
 
 An Ethereum rollup executes transactions in its own environment and uses Ethereum L1 for settlement, with data availability and verification arrangements defined by that rollup. Optimistic designs use a dispute process to challenge incorrect assertions. Validity designs use proofs checked by the settlement system. Sequencers can provide early execution evidence. Early L2 inclusion, L1 acceptance, and withdrawal completion can occur at different times.
 
-A bridge action can involve a transaction on the source chain, message processing, and a transaction or claim on the destination chain. A successful source receipt proves the source action executed. Track the message’s destination state separately.
-
 ## 9.2.2 — Follow an action across two state machines
 
 A bridge is not one atomic transaction spanning every chain involved. The source chain records one action, a messaging/verification mechanism carries evidence, and the destination chain processes a corresponding action under its own rules. Each stage can have a different completion condition and failure mode.
@@ -31,19 +29,13 @@ Source transaction included
 
 This is a reasoning diagram, not a universal bridge API. Actual networks define their own message identifiers, proof requirements, delays, and retry rules. A source receipt proves only the first execution. It does not establish that the destination recipient has received spendable funds.
 
-## 9.2.3 — Avoid assuming EVM-equivalence means fee-equivalence
+## 9.2.3 — Chain-specific fees, assets, and trust assumptions
 
 Fee components and finality signals vary. Some networks charge separately for L1 data publication. Display contract addresses and token identities with their network. A capstone estimate based on gas used times price is useful for local execution and does not automatically describe total fees on a rollup.
 
-Lab Escrow remains on one local chain. In a future cross-chain version, each deposit would need a separate model for message submission, confirmation, replay protection, and destination settlement.
-
-## 9.2.4 — Understand what the rollup inherits and what it defines
-
-A rollup executes its own ordered transactions while using L1 settlement and its defined data/verification system. Optimistic and validity mechanisms differ in how proposed state changes are accepted or challenged. Neither label alone tells you a particular network's fee formula, withdrawal delay, operator assumptions, or precise finality signal.
+The optimistic/validity distinction above concerns acceptance of proposed state changes. Neither label alone establishes a particular network's fee formula, withdrawal delay, operator assumptions, or precise finality signal.
 
 The EVM may support familiar Solidity behavior while the operational environment differs. An account needs the appropriate fee asset on the chosen network. A token bridged to a destination may use a different contract address and carry bridge-specific trust assumptions. Copying an L1 address into an L2 tool is not an asset-identification policy.
-
-For a fee report, list the components the network actually charges. Local `gasUsed * effectiveGasPrice` calculations teach execution fees; a rollup may add data-publication components. Avoid assigning one network's total-cost interpretation to all EVM environments.
 
 The capstone deliberately has one chain and no bridge. Use this lesson to identify which assumptions are local to that scope. A cross-chain extension would require message identity, replay prevention, destination authorization, and partial-progress recovery in addition to the existing deposit state machine. Those are new requirements to design, not features obtained automatically by redeploying the same bytecode.
 

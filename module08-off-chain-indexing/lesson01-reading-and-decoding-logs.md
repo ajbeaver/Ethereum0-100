@@ -23,13 +23,11 @@ cast rpc --rpc-url "$RPC_URL" eth_getLogs \
 
 Use this broad range only for the short local chain. A real indexer should choose explicit chunk boundaries.
 
-## 8.1.2 — Decode the known schema
+## 8.1.2 — Validate and decode the known schema
 
-For ReadingSet, parse topic one as an integer ID, and extract the last 20 bytes of topic two as the address. Decode the single 32-byte data word as an unsigned integer. Validate word lengths and signature before parsing. Sort by block number, transaction index, and log index after decoding the hex quantities. Lexicographic sorting puts `0x10` before `0x2`.
+For ReadingSet, parse topic one as an integer ID, extract the last 20 bytes of topic two as the address, and decode the data word as an unsigned integer. Validate the schema before interpreting those bytes, then apply the numeric ordering described below.
 
 In Python, `urllib.request` and `json` suffice to call a local endpoint. Keep transport, decoding, and state projection separate so you can replay saved logs in a unit test.
-
-## 8.1.3 — Turn a remote log into a validated record
 
 Retrieval, decoding, and projection are different operations. Retrieval obtains a response from a node. Decoding checks the known event schema and converts bytes to typed values. Projection applies those values to a derived application state. Separating them lets a saved response drive a deterministic test without a running node.
 
@@ -46,7 +44,7 @@ print(int.from_bytes(raw, byteorder="big"))
 
 The output is 32 and 42. Removing `0x` supplies hexadecimal digits to `bytes.fromhex`; big-endian means the highest-order byte comes first. This example establishes only integer decoding, not that the word came from the intended contract.
 
-## 8.1.4 — Select and order evidence deliberately
+## 8.1.3 — Select and order evidence deliberately
 
 An address filter prevents another contract with the same signature from entering the intended stream. Topic positions identify indexed arguments, so a filter for writer belongs in its declared position, not wherever a matching byte string appears. Pin explicit starting and ending heights for each accepted range.
 

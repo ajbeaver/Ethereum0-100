@@ -42,7 +42,7 @@ On a fresh course chain, the first balance is positive, Alice’s code is `0x`, 
 
 ## 1.1.4 — Interpret an account observation
 
-The three Cast commands ask the node questions; they do not send an ETH transfer. `--rpc-url` chooses the endpoint, and the final address identifies the account being inspected. `cast code` returns deployed runtime bytecode as hexadecimal data. `0x` means no bytes were returned, not the integer balance zero.
+The three Cast commands ask the node questions; they do not send an ETH transfer. `--rpc-url` chooses the endpoint, and the final address identifies the account being inspected. The empty byte result from `cast code` is different from a numerical balance of zero.
 
 | Observation | What it establishes | What it leaves unknown |
 |---|---|---|
@@ -50,7 +50,7 @@ The three Cast commands ask the node questions; they do not send an ETH transfer
 | Empty code | There is no ordinary runtime bytecode there at that state | Whether someone owns a corresponding private key |
 | An address string | A possible account identifier | Its balance or role on a different chain |
 
-A private key is secret signing material; it is not something you query from the public account. The wallet is software that helps use that authority. The address can be shared to receive funds without sharing signing authority. Anvil deliberately supplies known local keys for testing, which is a development convenience rather than the normal custody model.
+The public queries above require no signing authority. Anvil deliberately supplies known local keys for testing; that development convenience must not be confused with what an RPC account inspection reveals.
 
 For Lab Escrow, an account balance answers “how much ETH is here?” Storage answers “which obligations does the program recognize?” Keep those questions separate from the first lesson onward.
 

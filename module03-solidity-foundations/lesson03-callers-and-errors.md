@@ -12,7 +12,7 @@
 
 ## 3.3.1 — Inputs supplied by execution
 
-`msg.sender` is the immediate caller of the current call. If Alice calls contract A and A calls contract B, B sees A as its caller. A direct call from Alice sees Alice. `msg.value` is the wei attached to the current call. A Solidity function that accepts attached ETH must be payable.
+`msg.sender` is the immediate caller of the current call; `msg.value` is the wei attached to it. A Solidity function that accepts attached ETH must be payable. Trace a relay call to see why both values belong to the current call frame.
 
 Store an authority deliberately. A constructor that sets an owner from `msg.sender` will assign ownership to a factory if a factory deploys it. An explicit constructor argument can make ownership predictable across deployment paths.
 
@@ -20,7 +20,7 @@ Store an authority deliberately. A constructor that sets an owner from `msg.send
 
 Consider `Alice -> Relay -> Meter`. In Meter's call frame, `msg.sender` is Relay. Alice initiated the transaction, but Relay is making the immediate call. Authorization based on the immediate caller can therefore allow a contract wallet or reject an unapproved intermediary deliberately. Do not assume every useful caller is an EOA.
 
-`msg.value` belongs to that frame too. Relay can receive ETH without forwarding it to Meter, or forward a chosen amount. A payable modifier permits a function to receive value; it does not require positive value or establish who should receive credit. Those are separate checks in the function's contract.
+`msg.value` belongs to that frame too. Relay can receive ETH without forwarding it to Meter, or forward a chosen amount. Being payable permits a function to receive value; it does not require positive value or establish who should receive credit. Those are separate checks in the function's contract.
 
 In the authorization fragment, `immutable` means the operator is selected during construction and cannot later be reassigned by ordinary Solidity code. `version` is mutable storage, changing only when the authorized path succeeds. Put the fragment inside a contract declaration to compile it; the lesson focuses on this interface boundary, not a complete deployable application.
 

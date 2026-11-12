@@ -12,7 +12,7 @@
 
 ## 9.1.1 — Separate network, node, and deployment
 
-Your RPC URL selects an endpoint. Its chain ID describes the network domain of its transactions. A deployment identifies a particular creation event and resulting code in the history reported by that endpoint. For example, switching Terminal B to a second Anvil process may leave the same familiar development addresses visible. It can still point at a different Counter or a chain without Counter.
+The RPC URL selects an endpoint, the chain ID identifies a transaction domain, and a deployment is tied to a creation event and resulting code in that endpoint’s history. For example, switching Terminal B to a second Anvil process may leave the same familiar development addresses visible. It can still point at a different Counter or a chain without Counter.
 
 ## 9.1.2 — Identify the actual destination
 
@@ -27,7 +27,7 @@ Code presence alone is weak evidence. A different deployment may return the same
 
 ## 9.1.3 — Identity consists of several independent checks
 
-The URL is a location used to reach a node. The chain ID is a transaction-domain identifier. The address is a location within that chain's state. Creation evidence identifies the deployment whose history you intend to inspect. None alone establishes all the others.
+No single identifier establishes all the others. The following cases explain why the destination checks above must be used together.
 
 Two fresh Anvil processes can deliberately reuse chain ID 31337 and deterministic accounts. A familiar address or matching chain ID therefore does not prove that you selected the same lab run. A deployment made by the same sender at the same nonce may even reproduce an address while differing in constructor inputs or surrounding history.
 

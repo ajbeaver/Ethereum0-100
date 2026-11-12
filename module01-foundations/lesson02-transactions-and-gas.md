@@ -54,7 +54,7 @@ Compare this with a rejected request before inclusion. There is no mined executi
 
 ## 1.2.5 — Failure and ordering
 
-A transaction that is rejected before inclusion has no receipt and incurs no on-chain execution fee. An included transaction whose execution reverts pays for gas used and consumes its nonce. Its reverted contract writes and ETH transfers are rolled back. A transaction’s gas limit bounds consumption. Increasing the limit does not make an authorization check pass.
+A transaction that is rejected before inclusion has no receipt and incurs no on-chain execution fee. An included transaction whose execution reverts pays for gas used and consumes its nonce. Its reverted contract writes and ETH transfers are rolled back. Increasing a gas limit does not make an authorization check pass: a failed condition is different from insufficient execution resources.
 
 The nonce of a plain sender orders its transactions. If two competing transactions use the same sender nonce, only one can occupy that position in the same canonical history.
 

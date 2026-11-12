@@ -53,7 +53,7 @@ For Python 3.12+, an explicit pattern is `sqlite3.connect(path, autocommit=False
 
 SQLite INTEGER is signed 64-bit, smaller than Solidity’s uint256. Store arbitrary wei amounts as canonical decimal TEXT or fixed-size binary. Convert to Python `int` for arithmetic. SQL text sorts digit strings lexicographically, so order by block and log position rather than by amount text.
 
-A uint256 value can exceed SQLite's largest signed integer. Storing `10**20` as decimal text preserves its exact digits; converting that text back to Python int permits exact addition. Do not use SQL `SUM` over amount text and assume uint256 precision: SQL numeric coercion can exceed the integer domain and lose accuracy. Compute the teaching projection's arithmetic with Python integers.
+For example, storing `10**20` as decimal text preserves its exact digits; converting that text back to Python int permits exact addition. Do not use SQL `SUM` over amount text and assume uint256 precision: SQL numeric coercion can exceed the integer domain and lose accuracy. Compute the teaching projection's arithmetic with Python integers.
 
 Likewise, JSON presentation should choose an explicit convention for large amounts, commonly decimal strings for clients whose number type has limited precision. The representation is an interface choice, while the accounting remains integer arithmetic.
 

@@ -18,13 +18,13 @@ An interface makes code callable. It cannot guarantee that the callee implements
 
 A caller may assume that transferring v units delivers v units, that balanceOf reflects current holdings, that an oracle value is recent, or that code at a known address will remain behaviorally stable. Each is a separate assumption. A dependency can satisfy its function signatures while violating one of them.
 
-For a fee-taking token, accepting a request for 100 and receiving 97 creates a three-unit shortfall if the vault grants a claim for 100. Measuring the balance difference can support a documented fee-aware policy, but only if the token's balance reporting and later behavior meet the other required assumptions. Rebasing can change holdings after the initial difference was measured.
+For a fee-taking token, accepting a request for 100 and receiving 97 creates a three-unit shortfall if the vault grants a claim for 100. Measuring the difference helps only when balance reporting is trustworthy; rebasing can also change holdings after that measurement.
 
 An allowlist of supported assets is a statement of intended scope, not a mathematical guarantee. It should connect each accepted behavior to tests and a reason the integration is designed to handle it. A generic “ERC-20 supported” claim is too broad if the implementation only works with exact-transfer fixed balances.
 
 ## 7.3.3 — Observe the actual balance change
 
-A fee-taking token can receive a request to transfer 100 units and deliver 97 to the vault. Crediting 100 would overstate the claim. If supporting that class of token, compare the actual before and after balance under a documented asset policy. Balance differences alone cannot make an arbitrary malicious token trustworthy. A simpler policy can reject assets with unsupported behavior.
+Supporting that class of fee-taking token requires comparing the actual before and after balance under a documented asset policy. That policy must still cover balance reporting and later changes such as rebasing. A simpler integration can reject assets with unsupported behavior.
 
 The course capstone accepts only native ETH. Write this decision as part of its threat model and list the interfaces that would change for token support. Keep price feeds and upgradeable dependencies out of the capstone’s critical path.
 

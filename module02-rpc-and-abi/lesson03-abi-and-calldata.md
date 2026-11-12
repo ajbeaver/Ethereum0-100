@@ -20,7 +20,7 @@ cast calldata 'setValue(uint256)' 42
 cast calldata 'setValue(uint256)' 256
 ```
 
-For this signature, the selector is unchanged across both inputs. The next 32 bytes encode the unsigned integer in big-endian order, left-padded with zeros. `42` ends in `2a`. `256` ends in `0100`. Calldata also admits zero bytes. Include them when counting encoded length.
+Compare the two payloads: the selector stays fixed, while the argument for 256 ends in `0100`. The following breakdown explains the word layout and its padding.
 
 ## 2.3.2 — Decode the static example by position
 
@@ -31,7 +31,7 @@ The ABI is a shared encoding agreement, not a textual function call sent to the 
 | Selector | 4 bytes | Identifies the requested function signature |
 | First argument | 32 bytes | Encodes the value in the specified integer type |
 
-`42` is hexadecimal `2a`; zeros pad the rest of its word. Changing the integer changes the argument bytes, while keeping the selector fixed. Changing the parameter type can change the selector even if the visible numerical argument stays the same. Names such as `newValue` do not participate in the canonical signature.
+`42` is hexadecimal `2a`; zeros pad the rest of its big-endian word and count toward its encoded length. Changing the integer changes the argument bytes, while keeping the selector fixed. Changing the parameter type can change the selector even if the visible numerical argument stays the same. Names such as `newValue` do not participate in the canonical signature.
 
 Return values use ABI type encoding too, but ordinary returned data does not begin with the function selector. A client needs the output schema to interpret it. This is why Cast's read syntax can include return types such as `value()(uint256)` even though those return types are absent from selector computation.
 
@@ -39,7 +39,7 @@ Return values use ABI type encoding too, but ordinary returned data does not beg
 
 The target address is a transaction field. The address is separate from the calldata. Different contracts can interpret identical payloads differently. Four-byte selectors can collide. A match in a selector database is a clue. Use verified source, a trusted ABI, and the code at the intended address to understand behavior.
 
-Dynamic arguments such as strings have a head word that points to data in the tail. For a function call, offsets in the encoded argument tuple are relative to the start of the argument encoding, immediately after the selector. The tail for a string stores a byte length and padded UTF-8 bytes. Try `cast calldata 'setLabel(string)' 'hi'` and identify the offset, length, and two data bytes.
+For a dynamic argument, a head word points to data in a tail. Try `cast calldata 'setLabel(string)' 'hi'`, then trace the offset, length, and content as described next.
 
 ## 2.3.4 — Follow one dynamic offset
 

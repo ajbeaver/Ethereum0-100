@@ -14,8 +14,6 @@
 
 A withdrawal might read a credit, send ETH to the caller, then clear the credit. During the send, a recipient contract can call back into withdrawal. Since the original call has yet to clear the credit, the callback can see the same entitlement. This is observable even though Ethereum processes transactions in order. The nested calls are part of one transaction.
 
-Move the credit update before the external call. If payment fails, revert to restore the original value. Review every public entry point that can observe or change the shared state. A second function may rely on the same accounting even if the first function protects its own local variables.
-
 ## 6.1.2 — Trace the vulnerable ordering
 
 Reentrancy does not require two transactions to execute simultaneously. The vulnerability occurs when one execution hands control to another contract before it has restored the invariants other entry points rely on.
@@ -35,7 +33,7 @@ The honest user's extra funds make the second payment possible. Without them, th
 
 Checks validate the current request. Effects update credit and aggregate liabilities. Interactions call external code. With this order, a callback sees the credit already consumed. If the recipient rejects and the outer function reverts, the effects roll back, restoring the claim.
 
-A reentrancy guard rejects protected nested entry. It is useful defense, but it does not replace a coherent state model. Two guarded functions can still be incorrectly designed around unguarded functions reading inconsistent totals. Review which invariants are true at every external call, including calls that appear read-only from the caller's perspective.
+A reentrancy guard rejects protected nested entry. It does not replace a coherent state model: review every public entry point that can observe or change the shared accounting. Two guarded functions can still be incorrectly designed around unguarded functions reading inconsistent totals. Review which invariants are true at every external call, including calls that appear read-only from the caller's perspective.
 
 Lab Escrow keeps settlement free of recipient interaction: it creates credit. Withdrawal performs the interaction later. During a permitted callback into another function, that function must see consistent active principal, credit, and unpaid totals. The threat model should say which entries are allowed and why they remain safe.
 

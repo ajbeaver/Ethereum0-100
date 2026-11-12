@@ -12,7 +12,7 @@
 
 ## 6.3.1 — Follow the value
 
-Let A be active principal, C unpaid credits, and B the vault’s ETH balance. Opening with value v increases A and B by v. Settlement moves v from A to C. Withdrawal reduces C and B by v. A reverted action leaves these quantities unchanged. Track per-user amounts as well as totals because an accounting identity can hold while the wrong user receives a credit.
+Let A be active principal, C unpaid credits, and B the vault’s ETH balance. Trace a numerical example, then express its transitions in a ledger table. Track per-user amounts as well as totals: an accounting identity can hold while the wrong user receives a credit.
 
 Suppose B = 9, A = 5, and C = 3, in the same integer unit. The surplus is 1. Releasing a deposit of 2 leaves B at 9, changes A to 3, and raises C to 5. Withdrawing 2 leaves B at 7 and C at 3. The surplus stays 1. Receiving unsolicited ETH can increase it. Surplus alone establishes no user claim.
 
@@ -32,11 +32,9 @@ Each row is a relationship you can test around a call. The table does not decide
 
 An invariant of `B >= A + C` detects undercollateralization. Surplus `B - A - C` should remain unchanged by ordinary supported actions. Unexpected surplus growth can therefore be a symptom even when the basic inequality still passes.
 
-## 6.3.3 — From finding to regression
+## 6.3.3 — Write a reproducible review finding
 
-Write the preconditions, exact calls, expected result, observed result, and impact. A report that says “accounting is broken” omits the evidence needed to reproduce it. Include the smallest path that breaks the rule. Pair the fix with a test that fails on the faulty version and passes on the corrected version.
-
-## 6.3.4 — Write a review finding someone can rerun
+A review finding should establish the preconditions, exact calls, expected result, observed result, and impact. The concrete case below shows how to make that evidence reproducible.
 
 A useful finding has a concrete trigger and consequence. For example: “After crediting Bob 7, a rejecting recipient causes the function to return successfully with Bob's credit at zero and no payment.” This identifies the precondition, action, observed state, and broken promise. The general phrase “missing return check” is an implementation clue, but the observable lost claim explains impact.
 

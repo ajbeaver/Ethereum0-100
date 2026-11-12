@@ -12,7 +12,7 @@
 
 ## 1.3.1 — Ordered history
 
-Each block references a parent by hash. The block number is its position in a chain. The block hash identifies a particular block. Several candidate blocks can exist at the same height, so a height alone cannot prove that the history you read still holds.
+Each block references a parent by hash. Its number identifies a position and its hash identifies a particular block at that position. The next example shows why that distinction matters when history changes.
 
 Ethereum mainnet separates execution from consensus. Execution clients validate transactions and compute state changes. Consensus clients participate in selecting and tracking the canonical chain using proof of stake. Validators propose blocks and attest to what they observe. Anvil is a local execution simulator with convenient mining controls. Its immediate receipts do not model mainnet consensus or economic finality.
 
@@ -20,7 +20,7 @@ Ethereum mainnet separates execution from consensus. Execution clients validate 
 
 Imagine your indexer stores “processed through block 12.” The node later reports a different block at height 12. The number still matches, but the transactions and resulting state may differ. Recording the pair `(12, block_hash)` makes the original claim checkable.
 
-A block's parent hash links it to one particular predecessor. Following those links describes one candidate history. **Canonical** means the history the network currently treats as the chain. **Included** means a transaction appears in a block. A transaction can be included in a block that is no longer canonical, so these are not synonyms.
+**Canonical** means the history the network currently treats as the chain. **Included** means a transaction appears in a block. A transaction can be included in a block that is no longer canonical, so these are not synonyms.
 
 | Observation | Interpretation |
 |---|---|

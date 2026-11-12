@@ -32,7 +32,7 @@ Bob’s credit reaches 7 and Alice’s reaches 11. Carol has no credit because h
 
 ## 10.3.3 — Organize evidence by the claim it supports
 
-The clean-run sequence establishes that the submitted source and instructions can recreate the system. It also needs observable checkpoints. Save the manifest, transaction hashes, receipts, indexed height/hash, and getter comparisons at each meaningful stage, rather than only the final empty balance.
+The clean-run sequence establishes that the submitted source and instructions can recreate the system. It also needs observable checkpoints. Retain the manifest and the receipts required above alongside indexed height/hash and getter comparisons at each meaningful stage.
 
 The expected-state table is an independent oracle. Work through its arithmetic before executing: 7 plus 11 gives 18 active wei; releasing 7 moves it to unpaid credit; refunding 11 leaves 18 unpaid; withdrawals remove 7 then 11 from both obligations and assets. Each party's credit explains who is entitled to the intermediate totals.
 
