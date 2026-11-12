@@ -14,7 +14,31 @@
 
 A Solidity source file describes one or more contracts. Forge invokes the Solidity compiler and stores artifacts under `out/`. The ABI describes interactions and the bytecode provides executable instructions. Contract creation executes initialization code. Its returned runtime code is installed at the new address. The constructor runs during initialization and can write initial storage.
 
-Create a project using [local setup](../setup.md#4-start-a-solidity-project-in-module-03). Write this textbook example in `src/Counter.sol`:
+### Create the lesson project
+
+Foundry installation and local-node checks are covered in [local setup](../setup.md). Project layout and compiler configuration belong to this lesson. From the course root, create a separate project for the textbook example:
+
+```bash
+cd module03-solidity-foundations/exercises/lesson01
+mkdir counter-demo
+cd counter-demo
+mkdir -p src test
+cat > foundry.toml <<'TOML'
+[profile.default]
+src = "src"
+test = "test"
+solc = "0.8.30"
+evm_version = "cancun"
+TOML
+```
+
+Run these commands in Bash/zsh, or Ubuntu in WSL on Windows. Paste the configuration block through the final `TOML` line. Start with a new `counter-demo` directory; if it already exists from an earlier attempt, inspect it or choose a different name rather than overwriting your work.
+
+The **project root** is now `counter-demo/`, containing `foundry.toml`, `src/`, and `test/`. Forge reads this configuration when you run commands here. `solc` pins the Solidity compiler to 0.8.30; `evm_version` targets Cancun. Forge may download that compiler on the first build, so the first build needs internet access. Later builds can reuse the downloaded compiler. Module 05 introduces the Forge test library.
+
+Use a separate project directory for independent assignments, following the same layout and configuration. Keep this textbook demonstration separate from your exercise implementation.
+
+Write this textbook example in `src/Counter.sol`:
 
 ```solidity
 // SPDX-License-Identifier: MIT
